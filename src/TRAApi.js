@@ -86,7 +86,7 @@ const getTrainsByStationId = async id => {
     let { trains: lTrains, title } = dir;
     let { trains: sTrains } = data[i];
     if( lTrains.length < 1)
-      return sTrains;
+      return data[i];
     else {
       let map = Object.create(null);
       lTrains.forEach( lt => (map[lt.TrainNo] = lt));
@@ -102,16 +102,7 @@ const getTrainsByStationId = async id => {
           .concat(sTrains)
       }
     }
-    // if(trains.length < 1)
-    //   return data[i]
-    // else {
-    //   const trainIdOfLast = trains[trains.length - 1].TrainNo;
-    //   const index = data[i].trains.findIndex( t => t.TrainNo === trainIdOfLast);
-    //   trains = trains.concat(index >= 0 ? data[i].trains.slice(index + 1) : data[i].trains);
-    //   return {title: d.title, trains};
-    // }
   })
-  console.log(final);
   return final;
 }
 const getTrainsByRouteName = async (start, destination) => {

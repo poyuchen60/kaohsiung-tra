@@ -39,10 +39,20 @@ const routeFilter = trains => trains.map( ({
   EstimatedTime: estimatedTime(DepartureTime, ArrivalTime),
   TrainTypeName: trainType[TrainTypeID]
 }))
-const routeSorter = trains => {
+const routeSorter = (trains, liveBoardTrains) => {
   const current = timeString(new Date(), false);
+  const liveBoardMap = liveBoardTrains.reduce( (map, t) => {
+    map[t.TrainNo] = t;
+    return map;
+  }, Object.create(null));
+  trains.forEach( t => {
+    const liveBoardTrain = liveBoardMap[t.TrainNo];
+    liveBoardTrain && (t.DelayTime = liveBoardTrain.DelayTime);
+    console.log(t.DelayTime);
+  });
+
   return trains
-    .filter( t => t.DepartureTime >= current )
+    .filter( t => t.DepartureTime >= current || t.DelayTime >= 0 )
     .sort( (t1, t2) => 
       t1.DepartureTime > t2.DepartureTime
         ? 1
@@ -72,26 +82,47 @@ const getTrainsByStationId = async id => {
   const url = `https://ptx.transportdata.tw/MOTC/v2/Rail/TRA/DailyTimetable/Station/${id}/${tString}?$select=TrainNo%2CDirection%2CTrainTypeID%2CEndingStationName%2CDepartureTime&$filter=DepartureTime%20gt%20'${current}'&$orderby=DepartureTime%20asc&$format=JSON`
   const data = await getTrainsData(url);
   const liveBoard = await getLiveBoardByStationId(id);
-  const final = liveBoard.map( (d, i) => {
-    let { trains } = d;
-    if(trains.length < 1)
-      return data[i]
+  const final = liveBoard.map( (dir, i) => {
+    let { trains: lTrains, title } = dir;
+    let { trains: sTrains } = data[i];
+    if( lTrains.length < 1)
+      return sTrains;
     else {
-      const trainIdOfLast = trains[trains.length - 1].TrainNo;
-      const index = data[i].trains.findIndex( t => t.TrainNo === trainIdOfLast);
-      trains = trains.concat(index >= 0 ? data[i].trains.slice(index + 1) : data[i].trains);
-      return {title: d.title, trains};
+      let map = Object.create(null);
+      lTrains.forEach( lt => (map[lt.TrainNo] = lt));
+      sTrains = sTrains.map( st => {
+        const t = map[st.TrainNo];
+        t && (delete map[st.TrainNo]);
+        return t || st;
+      });
+      return {
+        title,
+        trains: lTrains
+          .filter( lt => map[lt.TrainNo])
+          .concat(sTrains)
+      }
     }
+    // if(trains.length < 1)
+    //   return data[i]
+    // else {
+    //   const trainIdOfLast = trains[trains.length - 1].TrainNo;
+    //   const index = data[i].trains.findIndex( t => t.TrainNo === trainIdOfLast);
+    //   trains = trains.concat(index >= 0 ? data[i].trains.slice(index + 1) : data[i].trains);
+    //   return {title: d.title, trains};
+    // }
   })
+  console.log(final);
   return final;
 }
 const getTrainsByRouteName = async (start, destination) => {
   const startId = ids[start], destinationId = ids[destination];
   const date = dateString();
   const url = `https://ptx.transportdata.tw/MOTC/v2/Rail/TRA/DailyTimetable/OD/${startId}/to/${destinationId}/${date}?$select=DailyTrainInfo%2COriginStopTime%2CDestinationStopTime&$format=JSON`
+  const liveBoard = await getLiveBoardByStationId(startId);
+  const liveBoardTrains = liveBoard[0].trains.concat(liveBoard[1].trains);
   const data = await getTrainsData(url, routeFilter, trains => ([{
     title: `往 ${destination}`,
-    trains: routeSorter(trains)
+    trains: routeSorter(trains, liveBoardTrains)
   }]));
   return data;
 }

@@ -69,10 +69,8 @@ const sort = function(){
 class TrainInfo extends Component {
   constructor(props) {
     super(props);
-    const { trains } = this.props;
     this.state = {
       folded: true,
-      hasMore:　trains.length > 3,
       sortBy: 'DepartureTime'
     }
   }
@@ -83,11 +81,12 @@ class TrainInfo extends Component {
   handleSort = (sortBy) => () => this.setState({sortBy})
   
   render() {
-    const { folded, hasMore, sortBy } = this.state;
-    const { classes, title, trains, destination } = this.props;
+    const { folded, sortBy } = this.state;
+    const { classes, title, trains, destination, onOpenTrainInfo } = this.props;
     const { handleExpand, handleSort } = this;
     sort[sortBy] && trains.sort(sort[sortBy]);
     const length = destination ? 7 : 2;
+    const hasMore = trains.length > length;
     return <div className={classes.constainer}>
       <Typography variant="h6" gutterBottom align='left'>
         {title}
@@ -115,7 +114,7 @@ class TrainInfo extends Component {
           key={i}
           className={ (i > length && folded) ? 'folded' : undefined }
         >
-          <Button>{t.TrainNo}</Button>
+          <Button onClick={onOpenTrainInfo(t)}>{t.TrainNo}</Button>
           <div>{t.TrainTypeName}</div>
           <div className='center'>
             <span>{t.DepartureTime}</span>

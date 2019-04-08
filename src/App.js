@@ -5,6 +5,12 @@ import TRAApi from './TRAApi';
 import RouteSelector from './components/RouteSelector';
 import StationInfo from './components/StationInfo';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -12,7 +18,9 @@ class App extends Component {
       start: '高雄',
       destination: '',
       routes: [],
-      loading: false
+      loading: false,
+      trainInfoOpen: false,
+      train: {}
     }
   }
 
@@ -42,10 +50,25 @@ class App extends Component {
       : await TRAApi.getTrainsByStationName(start);
     this.setState({routes, loading: false});
   }
+  handleUpdate = () =>
+    this.setState({loading: true}, this.handleStationDataLoad);
+
+  handleTrainInfoClose = () => this.setState({trainInfoOpen: false});
+  handleTrainInfoOpen = (train) => () => this.setState({trainInfoOpen: true, train});
 
   render() {
-    const { start, destination, routes, loading } = this.state;
-    const { handleSelectorChange, handleSwap } = this;
+    const {
+      start, destination,
+      routes, loading,
+      trainInfoOpen, train
+    } = this.state;
+    const {
+      handleSelectorChange,
+      handleSwap,
+      handleTrainInfoClose,
+      handleTrainInfoOpen,
+      handleUpdate
+    } = this;
     return (
       <div className="App">
         <RouteSelector
@@ -54,11 +77,26 @@ class App extends Component {
           onSwap={handleSwap}
         />
         <StationInfo
+          onUpdate={handleUpdate}
           loading={loading}
           start={start} destination={destination}
           routes={routes}
+          onOpenTrainInfo={handleTrainInfoOpen}
         />
-      </div>
+        <Dialog
+          open={trainInfoOpen}
+          onClose={handleTrainInfoClose}
+          aria-labelledby="train-info"
+        >
+          <DialogTitle id="train-info-title">{train.TrainNo}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Let Google help apps determine location. This means sending anonymous location data to
+              Google, even when no apps are running.
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
+      </div>      
     );
   }
 }

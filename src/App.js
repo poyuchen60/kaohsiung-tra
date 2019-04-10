@@ -6,7 +6,18 @@ import RouteSelector from './components/RouteSelector';
 import StationInfo from './components/StationInfo';
 import TrainDetail from './components/TrainDetail';
 
+import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+
+const styles = ({
+  dialog: {
+    margin: '48px',
+    height: 'calc(100% - 96px)'
+  },
+  fullScreen: {
+  }
+})
 
 class App extends Component {
   constructor(props) {
@@ -54,6 +65,7 @@ class App extends Component {
   handleTrainInfoOpen = (train) => () => this.setState({trainInfoOpen: true, train});
 
   render() {
+    const { classes, fullScreen } = this.props;
     const {
       start, destination,
       routes, loading,
@@ -81,19 +93,24 @@ class App extends Component {
           onOpenTrainInfo={handleTrainInfoOpen}
         />
         <Dialog
+          classes={{paper: classes[fullScreen?'fullScreen':'dialog']}}
           fullWidth
+          fullScreen={fullScreen}
           open={trainInfoOpen}
           onClose={handleTrainInfoClose}
           aria-labelledby="train-info"
         >
-          { train && <TrainDetail
+          { train ? <TrainDetail
             key={train.TrainNo}
+            start={start}
             id={train.TrainNo}
-          /> }
+            type={train.TrainTypeName}
+            onClose={handleTrainInfoClose}
+          /> : <div>Nothing</div> }
         </Dialog>
       </div>      
     );
   }
 }
 
-export default App;
+export default withStyles(styles)(withMobileDialog()(App));

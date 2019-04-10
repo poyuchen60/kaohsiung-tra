@@ -2,19 +2,28 @@ import React, { Component } from 'react';
 import TRAApi from '../TRAApi';
 
 import Typography from '@material-ui/core/Typography';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 
-import ForwardIcon from '@material-ui/icons/ArrowForwardIos';
 import WheelIcon from '@material-ui/icons/Accessible';
 import DailyIcon from '@material-ui/icons/Train';
 import FeedingIcon from '@material-ui/icons/PregnantWoman';
+import CloseIcon from '@material-ui/icons/Close';
 
 
 const styles = ({
-  container: {
+  content: {
+    flex: 1,
     position: 'relative',
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  title: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    margin: '3px 0',
+    padding: '0 10px'
   },
   loadingHolder: {
     position: 'absolute',
@@ -28,19 +37,32 @@ const styles = ({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  header: {
+    padding: '0 10px'
+  },
   stations: {
+    flex: 1,
+    overflow: 'auto',
     margin: 0,
-    padding: 0,
+    padding: '0',
     listStyle: 'none',
     '& li': {
       height: '30px',
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr 1fr 1fr'
+      gridTemplateColumns: '1fr 1fr 1fr 1fr',
+      alignItems: 'center',
+      padding: '0 10px'
     },
     '& .title': {
       position: 'sticky',
       top: 0,
       backgroundColor: 'white'
+    },
+    '& .passed': {
+      color: '#a0a0a0'
+    },
+    '& #train-start': {
+      backgroundColor: 'rgb(210, 247, 211)'
     }
   }
 })
@@ -61,7 +83,7 @@ class TrainDetail extends Component {
   }
 
   render() {
-    const { classes, id } = this.props;
+    const { classes, id, type, onClose, start } = this.props;
     const {
       train: {
         StartingStationName, EndingStationName,
@@ -73,50 +95,61 @@ class TrainDetail extends Component {
     const lastIndex = LastStationName
       ? StopTimes.findIndex( s => s.StationName === LastStationName)
       : -2;
-    console.log(lastIndex, StopTimes, LastStationName);
     return <>
-      {
-        loading && 
-          <div className={classes.loadingHolder}>{'Loading'}</div>
-      }
-      <DialogTitle id="train-info-title">
-        <div>{`${id}`}</div>
-        {
-          !loading && <div className={classes.header}>
-            <Typography variant="h6" gutterBottom>
-              {`${StartingStationName}  >>  ${EndingStationName}`}
-            </Typography>
-            <div>
-              { DailyFlag && <DailyIcon /> }
-              { WheelchairFlag && <WheelIcon /> }
-              { BreastFeedingFlag && <FeedingIcon /> }
+      <div className={classes.title}>
+        <Typography variant="h5">
+          {`${id} ${type}`}
+        </Typography>
+        <IconButton onClick={onClose} aria-label="Close">
+          <CloseIcon />
+        </IconButton>
+      </div>
+      
+      <div className={classes.content}>
+        { loading
+          ? <div className={classes.loadingHolder}>{'Loading'}</div>
+          : <>
+            <div className={classes.header}>
+              <Typography variant="h6" gutterBottom>
+                {`${StartingStationName}  >>  ${EndingStationName} ~ ${TripLine}`}
+              </Typography>
+              <Typography variant="subtitle1" gutterBottom>
+                {`${Note}`}
+              </Typography>
+              <div>
+                { DailyFlag  && <DailyIcon /> }
+                { WheelchairFlag && <WheelIcon /> }
+                { BreastFeedingFlag && <FeedingIcon /> }
+              </div>
             </div>
-          </div>
-        }
-      </DialogTitle>
-      <DialogContent className={classes.container}>
-        { 
-          !loading && <ul className={classes.stations}>
-            <li className='title'>
-              <div>站名</div>
-              <div>到站</div>
-              <div>離站</div>
-              <div>狀態</div>
-            </li>
-            { StopTimes.map( (s,i) => <li key={i}>
-                <div>{s.StationName}</div>
-                <div>{s.ArrivalTime}</div>
-                <div>{s.DepartureTime}</div>
-                <div>{
-                  i <= lastIndex
-                    ? '已過站'
-                    : i === lastIndex + 1 ? (DelayTime === 0 ? '準點' : `晚${DelayTime}分`) : ''
-                }</div>
+            <ul className={classes.stations}>
+              <li className='title'>
+                <div>站名</div>
+                <div>到站</div>
+                <div>離站</div>
+                <div>狀態</div>
               </li>
-            )}
-          </ul>
+              { StopTimes.map( (s,i) => {
+                  const isStart = s.StationName === start;
+                  const passed = i <= lastIndex;
+                  const delayText = i === lastIndex + 1
+                    ? (DelayTime === 0 ? '準點' : `晚${DelayTime}分`) : ''
+                  return <li
+                    key={i}
+                    id={isStart ? 'train-start' : undefined}
+                    className={passed ? 'passed' : undefined}
+                  >
+                    <div>{s.StationName}</div>
+                    <div>{s.ArrivalTime}</div>
+                    <div>{s.DepartureTime}</div>
+                    <div>{passed ? '已過站' : delayText}</div>
+                  </li>
+                }
+              )}
+            </ul>
+          </>
         }
-      </DialogContent>
+      </div>
     </>
   }
 }

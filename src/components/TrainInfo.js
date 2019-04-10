@@ -75,6 +75,11 @@ class TrainInfo extends Component {
     }
   }
 
+  shouldComponentUpdate = (nextProps) => {
+    const { destination } = this.props;
+    return !(destination !== nextProps.destination);
+  }
+
   handleExpand = () =>
     this.setState(({folded}) => ({folded: !folded}));
   
@@ -114,7 +119,14 @@ class TrainInfo extends Component {
           key={i}
           className={ (i > length && folded) ? 'folded' : undefined }
         >
-          <Button onClick={onOpenTrainInfo(t)}>{t.TrainNo}</Button>
+          <Button
+            onClick={onOpenTrainInfo({
+              TrainNo: t.TrainNo,
+              Direction: t.Direction,
+              TrainTypeName: t.TrainTypeName,
+              Date: new Date()
+            })}
+          >{t.TrainNo}</Button>
           <div>{t.TrainTypeName}</div>
           <div className='center'>
             <span>{t.DepartureTime}</span>

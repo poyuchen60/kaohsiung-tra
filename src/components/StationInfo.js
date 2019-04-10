@@ -20,7 +20,7 @@ const styles = ({
     left: 0,
     height: '100%',
     width: '100%',
-    backgroundColor: '#eaeaea',
+    backgroundColor: 'rgba(234,234,234,0.7)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -49,6 +49,7 @@ class StationInfo extends Component {
           { `從 ${start} 出發` }
         </Typography>
         <CountdownButton
+          loading={loading}
           key={`${start}&${destination}`}
           onClick={onUpdate}
         />
@@ -62,7 +63,7 @@ class StationInfo extends Component {
             key={`${start}#${title}`}
             title={title}
             trains={trains}
-            destination={destination}
+            destination={destination || ''}
             onOpenTrainInfo={onOpenTrainInfo}
           />)
         }

@@ -6,7 +6,7 @@ const styles = ({
   secend: {
     color: '#d0d0d0',
     marginLeft: '5px',
-    paddingTop: '3px',
+    paddingTop: '2px',
     width: '16px'
   }
 })
@@ -23,13 +23,14 @@ class CountdownButton extends Component {
   componentDidMount = () => {
     this.timer = setInterval(this.handleCountdown, 1000);
   }
-  componentWillMount = () => {
+  componentWillUnmount = () => {
     clearInterval(this.timer);
   }
 
   handleCountdown = () => {
     const { counter } = this.state;
-    counter !== 0
+    const { loading } = this.props;
+    !loading && counter !== 0
       ? this.setState({counter: counter - 1})
       : this.handleUpdateAndReset()
   }

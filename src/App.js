@@ -4,12 +4,9 @@ import TRAApi from './TRAApi';
 
 import RouteSelector from './components/RouteSelector';
 import StationInfo from './components/StationInfo';
+import TrainDetail from './components/TrainDetail';
 
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 class App extends Component {
   constructor(props) {
@@ -20,7 +17,7 @@ class App extends Component {
       routes: [],
       loading: false,
       trainInfoOpen: false,
-      train: {}
+      train: undefined
     }
   }
 
@@ -84,17 +81,15 @@ class App extends Component {
           onOpenTrainInfo={handleTrainInfoOpen}
         />
         <Dialog
+          fullWidth
           open={trainInfoOpen}
           onClose={handleTrainInfoClose}
           aria-labelledby="train-info"
         >
-          <DialogTitle id="train-info-title">{train.TrainNo}</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Let Google help apps determine location. This means sending anonymous location data to
-              Google, even when no apps are running.
-            </DialogContentText>
-          </DialogContent>
+          { train && <TrainDetail
+            key={train.TrainNo}
+            id={train.TrainNo}
+          /> }
         </Dialog>
       </div>      
     );

@@ -8,7 +8,6 @@ import FoldIcon from '@material-ui/icons/ExpandLess';
 
 const styles = ({
   constainer: {
-    backgroundColor: '#eaeaea',
     padding: '5px'
   },
   trains: {

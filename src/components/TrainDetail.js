@@ -31,11 +31,13 @@ const styles = ({
     backgroundColor: '#eaeaea',
     top: 0,
     left: 0,
-    width: '100%',
-    height: '100%',
+    width: 'calc(100% - 20px)',
+    height: 'calc(100% - 20px)',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    margin: '10px',
+    borderRadius: '5px'
   },
   header: {
     padding: '0 10px'

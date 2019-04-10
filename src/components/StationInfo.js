@@ -12,7 +12,11 @@ const styles = ({
     padding: '7px'
   },
   main: {
-    position: 'relative'
+    position: 'relative',
+    '& .trains': {
+      backgroundColor: '#eaeaea',
+      borderRadius: '5px'
+    }
   },
   loadingHolder: {
     position: 'absolute',
@@ -58,6 +62,7 @@ class StationInfo extends Component {
         { loading &&
           <div className={classes.loadingHolder}>Loading...</div>
         }
+        <div className="trains">
         { routes.map( ({title, trains}) =>
           <TrainInfo
             key={`${start}#${title}`}
@@ -67,6 +72,7 @@ class StationInfo extends Component {
             onOpenTrainInfo={onOpenTrainInfo}
           />)
         }
+        </div>
       </div>
     </Paper>
   }

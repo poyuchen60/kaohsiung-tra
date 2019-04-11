@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/kaohsiung-tra/static/css/main.8caab11f.chunk.css"
   },
   {
-    "revision": "4fffa16bb8ac112cb838f8310441b057",
+    "revision": "7bb30136b761eb2ed6d959f0f0d12f74",
     "url": "/kaohsiung-tra/index.html"
   }
 ];

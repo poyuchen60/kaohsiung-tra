@@ -42,13 +42,13 @@ class App extends Component {
   }
 
   hadleUpdateUrl = () => {
-    const { history } = this.props;
+    const { history, location } = this.props;
     let { start, destination } = this.state;
     start = TRAApi.getStationIdByName(start);
     destination = TRAApi.getStationIdByName(destination);
     destination = destination ? `&destination=${destination}` : '';
     history.replace({
-      path: '/',
+      path: location.pathname,
       search: `?origin=${start}${destination}`
     })
   }

@@ -81,7 +81,11 @@ class TrainDetail extends Component {
   componentDidMount = async () => {
     const { id } = this.props;
     const train = await TRAApi.getTrainDetailById(id);
-    this.setState({loading: false, train});
+    this.setState({loading: false, train}, this.scrollToView);
+  }
+
+  scrollToView = () => {
+    document.getElementById('train-start').scrollIntoView(false);
   }
 
   render() {

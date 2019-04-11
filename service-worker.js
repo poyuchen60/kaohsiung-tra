@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/kaohsiung-tra/precache-manifest.3731387fb98f879f6610bb71c91da33b.js"
+  "/kaohsiung-tra/precache-manifest.0c8e571c3c88e9da8334bac5e987ed8c.js"
 );
 
 workbox.clientsClaim();

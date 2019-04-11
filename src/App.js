@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import queryString from 'query-string';
 import './App.css';
 import TRAApi from './TRAApi';
 
@@ -22,9 +23,13 @@ const styles = ({
 class App extends Component {
   constructor(props) {
     super(props);
+    this.copyUrlHelper = React.createRef();
+    const search = queryString.parse(props.location.search);
+    const origin = TRAApi.getStationNameById(search.origin) || '高雄';
+    const destination = TRAApi.getStationNameById(search.destination) || '';
     this.state = {
-      start: '高雄',
-      destination: '',
+      start: origin,
+      destination: destination,
       routes: [],
       loading: false,
       trainInfoOpen: false,
@@ -34,6 +39,18 @@ class App extends Component {
 
   componentDidMount = async () => {
     this.handleStationDataLoad();
+  }
+
+  hadleUpdateUrl = () => {
+    const { history } = this.props;
+    let { start, destination } = this.state;
+    start = TRAApi.getStationIdByName(start);
+    destination = TRAApi.getStationIdByName(destination);
+    destination = destination ? `&destination=${destination}` : '';
+    history.replace({
+      path: '/',
+      search: `?origin=${start}${destination}`
+    })
   }
 
   handleSwap = () => {
@@ -56,13 +73,22 @@ class App extends Component {
     const routes = destination
       ? await TRAApi.getTrainsByRouteName(start, destination)
       : await TRAApi.getTrainsByStationName(start);
-    this.setState({routes, loading: false});
+    this.setState({routes, loading: false}, this.hadleUpdateUrl);
   }
   handleUpdate = () =>
-    this.setState({loading: true}, this.handleStationDataLoad);
+    !this.state.loading
+    && this.setState({loading: true}, this.handleStationDataLoad);
 
   handleTrainInfoClose = () => this.setState({trainInfoOpen: false});
   handleTrainInfoOpen = (train) => () => this.setState({trainInfoOpen: true, train});
+  handleCopyUrl = () => {
+    const input = this.copyUrlHelper.current;
+    input.style.display = 'block';
+    input.value = window.location.href;
+    input.select();
+    document.execCommand('copy');
+    input.style.display = 'none';
+  }
 
   render() {
     const { classes, fullScreen } = this.props;
@@ -76,7 +102,8 @@ class App extends Component {
       handleSwap,
       handleTrainInfoClose,
       handleTrainInfoOpen,
-      handleUpdate
+      handleUpdate,
+      handleCopyUrl
     } = this;
     return (
       <div className="App">
@@ -91,6 +118,7 @@ class App extends Component {
           start={start} destination={destination}
           routes={routes}
           onOpenTrainInfo={handleTrainInfoOpen}
+          onCopy={handleCopyUrl}
         />
         <Dialog
           classes={{paper: classes[fullScreen?'fullScreen':'dialog']}}
@@ -108,6 +136,7 @@ class App extends Component {
             onClose={handleTrainInfoClose}
           /> : <div>Nothing</div> }
         </Dialog>
+        <input ref={this.copyUrlHelper} type='text' style={{display: 'none'}}/>
       </div>      
     );
   }

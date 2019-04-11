@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/kaohsiung-tra/static/js/runtime~main.a1e10eac.js"
   },
   {
-    "revision": "cc8ad10b74b52755587c",
-    "url": "/kaohsiung-tra/static/js/main.2b9cf93d.chunk.js"
+    "revision": "c7d033b7996dea0f865c",
+    "url": "/kaohsiung-tra/static/js/main.73465d59.chunk.js"
   },
   {
     "revision": "61c8882368eb26395532",
     "url": "/kaohsiung-tra/static/js/2.c6551e6d.chunk.js"
   },
   {
-    "revision": "cc8ad10b74b52755587c",
+    "revision": "c7d033b7996dea0f865c",
     "url": "/kaohsiung-tra/static/css/main.8caab11f.chunk.css"
   },
   {
-    "revision": "4ac0bd8520647c926a549def685cfd71",
+    "revision": "4fffa16bb8ac112cb838f8310441b057",
     "url": "/kaohsiung-tra/index.html"
   }
 ];

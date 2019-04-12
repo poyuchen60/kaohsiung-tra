@@ -1,13 +1,13 @@
 {
-  "main.css": "/kaohsiung-tra/static/css/main.8caab11f.chunk.css",
-  "main.js": "/kaohsiung-tra/static/js/main.ac04cd68.chunk.js",
-  "main.js.map": "/kaohsiung-tra/static/js/main.ac04cd68.chunk.js.map",
+  "main.css": "/kaohsiung-tra/static/css/main.3f6ba5e9.chunk.css",
+  "main.js": "/kaohsiung-tra/static/js/main.75e47e51.chunk.js",
+  "main.js.map": "/kaohsiung-tra/static/js/main.75e47e51.chunk.js.map",
   "runtime~main.js": "/kaohsiung-tra/static/js/runtime~main.a1e10eac.js",
   "runtime~main.js.map": "/kaohsiung-tra/static/js/runtime~main.a1e10eac.js.map",
-  "static/js/2.c6551e6d.chunk.js": "/kaohsiung-tra/static/js/2.c6551e6d.chunk.js",
-  "static/js/2.c6551e6d.chunk.js.map": "/kaohsiung-tra/static/js/2.c6551e6d.chunk.js.map",
+  "static/js/2.d93794ab.chunk.js": "/kaohsiung-tra/static/js/2.d93794ab.chunk.js",
+  "static/js/2.d93794ab.chunk.js.map": "/kaohsiung-tra/static/js/2.d93794ab.chunk.js.map",
   "index.html": "/kaohsiung-tra/index.html",
-  "precache-manifest.e6c92131d995478681d21b7c89cbdd28.js": "/kaohsiung-tra/precache-manifest.e6c92131d995478681d21b7c89cbdd28.js",
+  "precache-manifest.e33ce9f6acf011a501e2b6ae9150a34f.js": "/kaohsiung-tra/precache-manifest.e33ce9f6acf011a501e2b6ae9150a34f.js",
   "service-worker.js": "/kaohsiung-tra/service-worker.js",
-  "static/css/main.8caab11f.chunk.css.map": "/kaohsiung-tra/static/css/main.8caab11f.chunk.css.map"
+  "static/css/main.3f6ba5e9.chunk.css.map": "/kaohsiung-tra/static/css/main.3f6ba5e9.chunk.css.map"
 }

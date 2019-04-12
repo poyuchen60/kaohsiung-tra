@@ -89,7 +89,7 @@ class TrainInfo extends Component {
     const { classes, title, trains, destination, onOpenTrainInfo } = this.props;
     const { handleExpand, handleSort } = this;
     sort[sortBy] && trains.sort(sort[sortBy]);
-    const length = destination ? 7 : 2;
+    const length = destination ? 8 : 3;
     const hasMore = trains.length > length;
     return <div className={classes.constainer}>
       <Typography variant="h6" gutterBottom align='left'>
@@ -116,7 +116,7 @@ class TrainInfo extends Component {
         </li>
         { trains.map( (t, i) =><li
           key={i}
-          className={ (i > length && folded) ? 'folded' : undefined }
+          className={ (i >= length && folded) ? 'folded' : undefined }
         >
           <Button
             onClick={onOpenTrainInfo({
